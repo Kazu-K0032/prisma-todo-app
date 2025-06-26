@@ -1,47 +1,21 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma"; // Prismaクライアント（シングルトンインスタンス）をインポート
 
-// GET /api/todos - すべてのTodoを取得
+// GETリクエストハンドラ: 全Todoのリストを取得
 export async function GET() {
-  try {
-    const todos = await prisma.todo.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    return NextResponse.json(todos);
-  } catch (error) {
-    console.error("Error fetching todos:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch todos" },
-      { status: 500 }
-    );
-  }
+  const todos = await prisma.todo.findMany(); // DBからTodoテーブルの全レコードを取得
+  return NextResponse.json(todos); // JSON形式でレスポンスを返す（ステータス200）
 }
 
-// POST /api/todos - 新しいTodoを作成
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { title } = body;
-
-    if (!title || typeof title !== "string" || title.trim().length === 0) {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 });
-    }
-
-    const todo = await prisma.todo.create({
-      data: {
-        title: title.trim(),
-      },
-    });
-
-    return NextResponse.json(todo, { status: 201 });
-  } catch (error) {
-    console.error("Error creating todo:", error);
-    return NextResponse.json(
-      { error: "Failed to create todo" },
-      { status: 500 }
-    );
-  }
+// POSTリクエストハンドラ: 新しいTodoを追加
+export async function POST(req: Request) {
+  const body = await req.json(); // リクエストボディからJSONデータを取得
+  const todo = await prisma.todo.create({
+    // Prismaを使ってTodoレコードを新規作成
+    data: {
+      title: body.title, // 受け取ったtitleをセット
+      // completedとcreatedAtはスキーマでデフォルト値が設定されているため指定不要
+    },
+  });
+  return NextResponse.json(todo, { status: 201 }); // 作成したTodoをJSONで返し、201 Createdを指定
 }

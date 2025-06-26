@@ -1,39 +1,84 @@
 "use client";
 
-import { useState } from "react";
-import AddTodoForm from "@/components/AddTodoForm";
-import TodoList from "@/components/TodoList";
+import { useState, useEffect } from "react";
+
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+  createdAt: string;
+}
 
 export default function Home() {
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [todos, setTodos] = useState<Todo[]>([]); // Todo一覧の状態（ステート）
+  const [newTitle, setNewTitle] = useState(""); // 新規追加するTodoのタイトル入力値
 
-  const handleAddTodo = async (title: string) => {
-    // TodoListコンポーネントが自動的に更新されるので、
-    // ここでは何もしません
-  };
+  // コンポーネント初期描画時にTodo一覧を取得
+  useEffect(() => {
+    // /api/todos からTodo一覧を取得
+    fetch("/api/todos")
+      .then((res) => res.json())
+      .then((data) => {
+        setTodos(data); // 取得したデータをステートに保存
+      })
+      .catch((err) => {
+        console.error("Failed to fetch todos:", err);
+      });
+  }, []); // 空の依存配列により、初回マウント時のみ実行
 
-  const handleRefresh = () => {
-    setRefreshKey((prev) => prev + 1);
+  // 新しいTodoを追加するハンドラ関数
+  const addTodo = async () => {
+    if (!newTitle.trim()) {
+      return; // タイトルが空白の場合は何もしない
+    }
+    try {
+      // APIに新規TodoデータをPOST送信
+      const res = await fetch("/api/todos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: newTitle }),
+      });
+      if (!res.ok) {
+        throw new Error(`Error: ${res.status}`); // エラーハンドリング
+      }
+      const createdTodo = await res.json(); // 作成されたTodo（APIのレスポンス）
+      setTodos((prev) => [...prev, createdTodo]); // 現在のTodo一覧に新しいTodoを追加
+      setNewTitle(""); // 入力欄をクリア
+    } catch (err) {
+      console.error("Failed to add todo:", err);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Todo アプリ</h1>
-            <button
-              onClick={handleRefresh}
-              className="px-4 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"
-            >
-              更新
-            </button>
-          </div>
-
-          <AddTodoForm onAdd={handleAddTodo} />
-          <TodoList key={refreshKey} />
-        </div>
+    <main className="p-4">
+      {/* Todo入力フォーム */}
+      <div className="mb-4 flex gap-2">
+        <input
+          className="border p-2 flex-1"
+          type="text"
+          placeholder="Todoを入力"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+        />
+        <button className="bg-blue-500 text-white px-4" onClick={addTodo}>
+          追加
+        </button>
       </div>
-    </div>
+
+      {/* Todo一覧表示 */}
+      <ul>
+        {todos.map((todo) => (
+          <li key={todo.id} className="p-2 border-b flex items-center">
+            <span className="flex-1">{todo.title}</span>
+            {/* 将来的にcompletedを切り替えるチェックボックスなどを配置可能 */}
+            {todo.completed ? (
+              <span className="text-green-600">✅完了</span>
+            ) : (
+              <span className="text-gray-500">未完了</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </main>
   );
 }
