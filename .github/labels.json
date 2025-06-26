@@ -1,0 +1,57 @@
+[
+  {
+    "name": "frontend",
+    "color": "e99695",
+    "description": "フロントエンド"
+  },
+  {
+    "name": "backend",
+    "color": "5319e7",
+    "description": "バックエンド"
+  },
+  {
+    "name": "sub-issue",
+    "color": "6ff655",
+    "description": "サブイシュー"
+  },
+  {
+    "name": "feature",
+    "color": "008672",
+    "description": "新機能の追加"
+  },
+  {
+    "name": "bug",
+    "color": "d73a4a",
+    "description": "バグの修正"
+  },
+  {
+    "name": "release",
+    "color": "eb5512",
+    "description": "リリース"
+  },
+  {
+    "name": "docs",
+    "color": "0075ca",
+    "description": "ドキュメントの更新"
+  },
+  {
+    "name": "refactor",
+    "color": "d4c5f9",
+    "description": "リファクタリング"
+  },
+  {
+    "name": "test",
+    "color": "fbca04",
+    "description": "テスト・検証"
+  },
+  {
+    "name": "on-hold/pending",
+    "color": "c5def5",
+    "description": "保留中"
+  },
+  {
+    "name": "hot-fix",
+    "color": "e4e669",
+    "description": "緊急修正"
+  }
+]
