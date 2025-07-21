@@ -1,13 +1,13 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import RegisterTodo from "@/features/registerTodo/registerTodo";
 import DisplayTodoList from "@/features/displayTodoList/displayTodoList";
-import { Todo } from "@/types/todo";
+import type { Todo } from "@/types/todo";
 
-export default function TodoPage() {
+export default function HomeClient() {
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  // 初回取得
   useEffect(() => {
     const fetchTodos = async () => {
       const res = await fetch("/api/todo/list");
@@ -17,7 +17,6 @@ export default function TodoPage() {
     fetchTodos();
   }, []);
 
-  // 追加用
   const addTodo = (todo: Todo) => {
     setTodos((prev) => [todo, ...prev]);
   };

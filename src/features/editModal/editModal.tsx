@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Todo } from "@/types/todo";
+import type { Todo } from "@/types/todo";
+import { TODO_ENDPOINT } from "@/constant/endpoint";
 
 type EditModalProps = {
   todo: Todo;
@@ -14,7 +15,7 @@ export default function EditModal({ todo, onClose, onSave }: EditModalProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const updated = { ...todo, title, description };
-    const res = await fetch("/api/todo/update", {
+    const res = await fetch(TODO_ENDPOINT.UPDATE, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updated),

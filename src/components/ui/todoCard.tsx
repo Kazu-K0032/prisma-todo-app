@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { Todo } from "@/types/todo";
+"use client";
+
+import { useState } from "react";
+import type { Todo } from "@/types/todo";
 import EditModal from "@/features/editModal/editModal";
 
 interface TodoCardProps {
@@ -7,7 +9,7 @@ interface TodoCardProps {
   isSelected: boolean;
   onSelect: () => void;
   onDelete: () => void;
-  onEdit: (updated: Todo) => void; // コールバックを追加
+  onEdit: (updated: Todo) => void;
 }
 
 export default function TodoCard({

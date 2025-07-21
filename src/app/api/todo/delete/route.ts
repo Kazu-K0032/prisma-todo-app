@@ -9,6 +9,5 @@ export async function DELETE(req: NextRequest) {
   await prisma.todo.deleteMany({
     where: { id: { in: idList } },
   });
-  // 必ずJSONレスポンスを返す
   return NextResponse.json({ success: true });
 }

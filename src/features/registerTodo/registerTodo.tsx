@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Todo } from "@/types/todo";
+import type { Todo } from "@/types/todo";
+import { TODO_ENDPOINT } from "@/constant/endpoint";
 
-type RegisterTodoProps = {
+interface RegisterTodoProps {
   onAdd: (todo: Todo) => void;
-};
+}
 
 export default function RegisterTodo({ onAdd }: RegisterTodoProps) {
   const [title, setTitle] = useState("");
@@ -13,13 +14,13 @@ export default function RegisterTodo({ onAdd }: RegisterTodoProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/todo/register", {
+    const res = await fetch(TODO_ENDPOINT.REGISTER, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, description }),
     });
     const newTodo = await res.json();
-    onAdd(newTodo); // ここで即時追加
+    onAdd(newTodo);
     setTitle("");
     setDescription("");
   };
