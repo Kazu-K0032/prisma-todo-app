@@ -1,15 +1,10 @@
+// 'Todo'の型
 export interface Todo {
   id: number;
   title: string;
-  completed: boolean;
-  createdAt: Date;
-}
-
-export interface CreateTodoInput {
-  title: string;
-}
-
-export interface UpdateTodoInput {
-  title?: string;
-  completed?: boolean;
-}
+  description: string;
+  is_completed: boolean;
+  due_date: Date;
+  created_at: Date;
+  updated_at: Date;
+};

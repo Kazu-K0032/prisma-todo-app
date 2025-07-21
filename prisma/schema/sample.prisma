@@ -1,5 +1,0 @@
-model Sample {
-  id        Int    @id @default(autoincrement())
-  name      String
-  context   String
-}

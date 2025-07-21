@@ -1,13 +1,9 @@
-model Task {
-  id            String    @id @default(uuid())
-  user_id       String
+model Todo {
+  id            Int       @id @default(autoincrement())
   title         String
   description   String?
   is_completed  Boolean   @default(false)
   due_date      DateTime?
   created_at    DateTime  @default(now())
   updated_at    DateTime  @default(now()) @updatedAt
-  
-  // リレーション
-  user User @relation(fields: [user_id], references: [id])
 }
